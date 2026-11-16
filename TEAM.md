@@ -12,7 +12,7 @@
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
 |   1 | Nguyễn Viết Mạnh Khải | 2A202603664 | | | Workflow + Single ReAct + Benchmark & ADR |
-|   2 | Vũ Đức Anh | 2A202603573 | | | Orchestrator + Security/Handoff + Crash & Research Card |
+|   2 | Vũ Đức Anh | 2A202603573 | vuducanh039@gmail.com | ducanh005 | Orchestrator + Security/Handoff + Crash & Research Card |
 
 Xem chi tiết phân công và quy tắc tránh xung đột Git tại [report/team/WORKPLAN.md](report/team/WORKPLAN.md).
 
@@ -27,7 +27,7 @@ Gợi ý chia vai:
 
 | Người | Vai | Commit | Test đã thêm hoặc sửa |
 | --- | --- | --- | --- |
-| | | | |
+| Vũ Đức Anh (2A202603573) | Orchestrator + Security/Handoff + Crash & Research Card | `0ed16f2` | `src/tests/test_student_orchestrator_security.py` (4 tests: anti-leak, handoff allowlist, approval mismatch, crash resume) |
 
 ## Cá nhân
 
