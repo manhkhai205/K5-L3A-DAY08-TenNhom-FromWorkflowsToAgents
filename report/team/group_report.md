@@ -6,7 +6,7 @@ Tối đa 5 trang ngoài phụ lục. Số liệu lấy từ file trong `src/rep
 
 - Tên nhóm: Nhóm K5-L3A-DAY08 (Nguyễn Viết Mạnh Khải & Vũ Đức Anh)
 - Thành viên: xem [TEAM.md](../../TEAM.md)
-- Commit chốt (trùng `report/team/decision_adr.md`): `<PENDING_HASH>`
+- Commit chốt (trùng `report/team/decision_adr.md`): `e2e13e7`
 
 ## 2. Mục tiêu và cách tiếp cận
 

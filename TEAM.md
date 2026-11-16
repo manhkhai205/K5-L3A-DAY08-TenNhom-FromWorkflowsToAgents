@@ -5,7 +5,7 @@
 - Tên nhóm:
 - Lớp: L3A
 - Repo nhóm: `K5-L3A-DAY08-TenNhom-FromWorkflowsToAgents` (xem [SUBMISSION.md](SUBMISSION.md))
-- URL repo, nhánh nộp, commit chốt: `https://github.com/manhkhai205/K5-L3A-DAY08-TenNhom-FromWorkflowsToAgents`, nhánh `main`
+- URL repo, nhánh nộp, commit chốt: `https://github.com/manhkhai205/K5-L3A-DAY08-TenNhom-FromWorkflowsToAgents`, nhánh `main`, commit chốt `e2e13e7`
 
 ## Thành viên
 
