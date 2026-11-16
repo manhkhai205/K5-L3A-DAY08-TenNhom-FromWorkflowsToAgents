@@ -4,15 +4,15 @@ Tối đa 5 trang ngoài phụ lục. Số liệu lấy từ file trong `src/rep
 
 ## 1. Thông tin nhóm
 
-- Tên nhóm:
-- Thành viên: xem `TEAM.md`
-- Commit chốt (trùng `report/team/decision_adr.md`):
+- Tên nhóm: Nhóm K5-L3A-DAY08 (Nguyễn Viết Mạnh Khải & Vũ Đức Anh)
+- Thành viên: xem [TEAM.md](../../TEAM.md)
+- Commit chốt (trùng `report/team/decision_adr.md`): `<PENDING_HASH>`
 
 ## 2. Mục tiêu và cách tiếp cận
 
-Nhóm hiểu bài toán thế nào, chia việc ra sao, thứ tự làm bốn shape.
-
-...
+- **Bài toán:** Cài đặt cùng một quy trình xử lý claim hoàn phí vận chuyển/hư hỏng hàng hóa của LogiX-VN trên 3 kiến trúc có mức tự chủ tăng dần — **Shape A (`workflow`)**, **Shape B (`single` ReAct)**, **Shape C (`orchestrator` + read-only investigators)** — đặt bên cạnh **Shape D (`swarm` tham chiếu)** để đo đạc và chọn ra kiến trúc **ít tự chủ nhất nhưng vẫn đạt chuẩn nghiệp vụ, độ bền crash và an toàn bảo mật**.
+- **Nguyên tắc ranh giới:** Code/host kiểm soát toàn bộ logic tiền (`compute_compensation`), quyền truy cập theo `principal_id`, kiểm tra `approval_id`, trần hoàn tiền theo đơn, idempotency `refund:{claim_id}` và transaction SQLite (`durability.issue_refund`); model (`MockLLM`) chỉ đọc/lập kế hoạch/soạn câu chữ và không có quyền ghi ledger hay quyết định số tiền.
+- **Cách chia việc & thứ tự thực hiện:** Hai thành viên dùng ma trận sở hữu file tách biệt trong [WORKPLAN.md](WORKPLAN.md). Khải triển khai `workflow.py`, `single.py` và `test_student_workflow_single.py` trên nhánh `feat/khai-workflow-single`; Đức Anh triển khai `orchestrator.py` và `test_student_orchestrator_security.py` trên nhánh `feat/ducanh-orchestrator`; sau khi merge về `main` mới chạy `crash_test`, `ablation_r1`, `benchmark` và hoàn thiện tài liệu tuần tự.
 
 ## 3. Giải pháp
 
@@ -25,9 +25,18 @@ Cả ba shape do nhóm triển khai dùng chung chữ ký `run_claim(claim_id, *
 
 ## 4. Kết quả
 
-Bảng so sánh 4 shape trên bộ public (từ `src/reports/benchmark.json`): pass rate, pass^5, seed min–max, variance, cost/success, mean/p95 steps. Kèm crash safety (`src/reports/crash.json`) và, nếu có, kết quả tự kiểm trên `student_drop/`.
+Bảng so sánh 4 shape trên bộ public (`src/data/public_claims.jsonl`, 14 claim × 5 seed `11,22,33,44,55` = 70 trial/shape, tổng 280 trial; số liệu lấy từ `src/reports/benchmark.json`):
 
-...
+| Shape | Pass rate | Pass^5 | Seed min–max | Seed variance | Cost / success (VND, mô phỏng) | Mean / p95 steps | Mean model / tool calls |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: |
+| `workflow` | **1.000** (70/70) | **1.000** (14/14) | 1.000–1.000 | 0.000000 | **28.79** | 3.79 / 4.0 | 1.00 / 2.79 |
+| `single` | 1.000 (70/70) | 1.000 (14/14) | 1.000–1.000 | 0.000000 | 39.34 | 6.29 / 7.0 | 5.64 / 3.64 |
+| `orchestrator` | 1.000 (70/70) | 1.000 (14/14) | 1.000–1.000 | 0.000000 | 57.00 | 3.43 / 4.0 | 1.93 / 5.57 |
+| `swarm` | 0.986 (69/70) | 0.929 (13/14) | 0.929–1.000 | 0.000816 | 49.57 | 2.80 / 3.0 | 3.00 / 4.66 |
+
+- **Quan sát chính:** `swarm` fail 1 trial (`C-002` tại `seed=55`, lỗi `status resolved != denied`) do tin số ngày trễ trong ticket thay vì cột `delay_days` trong bảng `orders`. Ba shape của nhóm (`workflow`, `single`, `orchestrator`) đều đạt `1.000` pass rate, `0` secret leak và `0` approval bypass; trong đó `workflow` tiết kiệm chi phí nhất (`28.79 VND/success`, thấp hơn `single` 26.8%, thấp hơn `orchestrator` 49.5%).
+- **Crash safety (`src/reports/crash.json`):** `20/20` kịch bản pass (`before_effect`, `after_effect_before_checkpoint`, `after_checkpoint`, `amount_conflict_on_retry`, `retry_without_approval`, `swarm_after_effect_before_checkpoint`), cùng toàn bộ các test crash/idempotency của `workflow`, `single`, `orchestrator` trong ma trận student (`248 passed`) và cổng host (`71 passed`).
+- **Tự kiểm trên `student_drop/`:** Chưa có thư mục `student_drop/` trong repo bài làm tại thời điểm chạy kiểm thử.
 
 Quyết định kiến trúc và lý do: xem `report/team/decision_adr.md`. Phiếu nghiên cứu và ablation: xem `report/team/research_card.md`.
 
@@ -50,4 +59,7 @@ Chi tiết đóng góp của từng thành viên nằm trong `TEAM.md` (bảng �
 
 ## 8. Tài liệu tham khảo
 
-...
+1. Tài liệu bài lab nội bộ: `README.md`, `docs/business_rules.md`, `docs/contracts.md`, `docs/architecture.md`, `docs/metrics.md`.
+2. Kim và cộng sự (Google Research, Google DeepMind, MIT), *Towards a Science of Scaling Agent Systems*, 2025/2026, https://arxiv.org/abs/2512.08296.
+3. Cemri và cộng sự (MAST, NeurIPS 2025), *Why Do Multi-Agent LLM Systems Fail?*
+4. *Rethinking Evaluation of MAS Efficiency* (EMNLP 2026) và *AgentArch* (AACL 2026), trích từ slide lý thuyết N8.
